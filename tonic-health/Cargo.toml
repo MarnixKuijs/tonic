@@ -18,7 +18,7 @@ default = ["transport"]
 transport = ["tonic/transport"]
 
 [dependencies]
-async-stream = "0.2"
+async-stream = "0.3"
 tokio = { version = "0.3", features = ["sync", "stream"] }
 tonic = { version = "0.3", path = "../tonic", features = ["codegen", "prost"] }
 bytes = "0.6"
