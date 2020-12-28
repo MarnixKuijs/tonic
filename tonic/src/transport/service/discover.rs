@@ -7,7 +7,8 @@ use std::{
     pin::Pin,
     task::{Context, Poll},
 };
-use tokio::{stream::Stream, sync::mpsc::Receiver};
+use tokio::sync::mpsc::Receiver;
+use tokio_stream::Stream;
 
 use tower::discover::Change;
 
@@ -28,7 +29,7 @@ impl<K: Hash + Eq + Clone> Stream for DynamicServiceStream<K> {
 
     fn poll_next(mut self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Option<Self::Item>> {
         let c = &mut self.changes;
-        match Pin::new(&mut *c).poll_next(cx) {
+        match Pin::new(&mut *c).poll_recv(cx) {
             Poll::Pending | Poll::Ready(None) => Poll::Pending,
             Poll::Ready(Some(change)) => match change {
                 Change::Insert(k, endpoint) => {
